@@ -238,6 +238,14 @@ $mailer->LE            = $mail_newline;
         });
     });
 </script>
+<script>
+	    // let the browser natively reset default
+			$(window).bind("pageshow", function() {
+    		var form = $('form'); 
+    		form[0].reset();
+			});
+			
+</script>
 </body>
 </html>
 <?php
