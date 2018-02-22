@@ -244,7 +244,7 @@ if ($pwd_show_policy_pos === 'above') {
             <?php echo "<BR>"; ?>
             <!-- Here's the tick box -->
             <input type="checkbox" id="toggle-extra">
-            <label for="toggle-extra">Sync eduMail (Staff Only)</label>
+            <label for="toggle-extra"><?php echo "Sync eduMail (eduMail Users Only)"; ?></label>
             <!-- end tick box -->     
         </div>
     </div>
