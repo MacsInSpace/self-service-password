@@ -20,7 +20,7 @@
 #==============================================================================
 
 # This page is called to change password
-
+# Will be heavily modified to change and "sync" 2 LDAP passwords 
 #==============================================================================
 # POST parameters
 #==============================================================================
@@ -226,23 +226,54 @@ if ($pwd_show_policy_pos === 'above') {
 <div class="alert alert-info">
 <form action="#" method="post" class="form-horizontal">
     <div class="form-group">
-        <label for="login" class="col-sm-4 control-label"><?php echo $messages["login"]; ?></label>
+        <label for="login" class="col-sm-4 control-label"><?php echo "Local Nework Username"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-                <input type="text" name="login" id="login" value="<?php echo htmlentities($login) ?>" class="form-control" placeholder="<?php echo $messages["login"]; ?>" />
+                <input type="text" name="login" id="login" value="<?php echo htmlentities($login) ?>" class="form-control" placeholder="<?php echo "012345678"; ?>" />
             </div>
         </div>
     </div>
     <div class="form-group">
-        <label for="oldpassword" class="col-sm-4 control-label"><?php echo $messages["oldpassword"]; ?></label>
+        <label for="oldpassword" class="col-sm-4 control-label"><?php echo "Local Nework Password"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
                 <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="<?php echo $messages["oldpassword"]; ?>" />
             </div>
+            <?php echo "<BR>"; ?>
+            <!-- Here's the tick box -->
+            <input type="checkbox" id="toggle-extra">
+            <label for="toggle-extra">Sync eduMail (Staff Only)</label>
+            <!-- end tick box -->     
         </div>
     </div>
+    
+    <!-- Added an id for the hidden field row here and set it to not display -->
+    <div class="form-group2" id="hidden-area" style="display: none;">
+    <div class="form-group">
+        <label for="hidden-area-login" class="col-sm-4 control-label"><?php echo "eduMail Username"; ?></label>
+        <div class="col-sm-8">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                <input type="text" name="hidden-area-login" id="hidden-area-login" value="" class="form-control" placeholder="<?php echo "012345678"; ?>" />
+            </div>
+        </div>
+     </div>
+    <div class="form-group">
+        <label for="hidden-area-password" class="col-sm-4 control-label"><?php echo "eduMail Password"; ?></label>
+        <div class="col-sm-8">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+                <input type="password" name="hidden-area-password" id="hidden-area-password" class="form-control" placeholder="<?php echo "Old eduMail Password"; ?>" />
+            </div>
+        </div>
+     </div>
+                 <?php echo "<BR>"; ?>
+
+     </div>
+    <!-- end new hidden field -->
+    
     <div class="form-group">
         <label for="newpassword" class="col-sm-4 control-label"><?php echo $messages["newpassword"]; ?></label>
         <div class="col-sm-8">
@@ -273,11 +304,38 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-offset-4 col-sm-8">
             <button type="submit" class="btn btn-success">
                 <i class="fa fa-fw fa-check-square-o"></i> <?php echo $messages['submit']; ?>
-            </button>
+            </button>       
         </div>
     </div>
 </form>
 </div>
+<script src="https://password.livingstoneps.vic.edu.au/js/jquery-1.10.2.min.js"></script>
+<script src="https://password.livingstoneps.vic.edu.au/js/bootstrap.min.js"></script><script>
+    $(document).ready(function(){
+        // Menu links popovers
+        $('[data-toggle="menu-popover"]').popover({
+            trigger: 'hover',
+            placement: 'bottom',
+            container: 'body' // Allows the popover to be larger than the menu button
+        });
+    });
+    
+    // Set an on click event handler for the tick box to toggle the field on and off
+    $('#toggle-extra').on('click', function() { 
+   		$('#hidden-area').slideToggle() 
+    });
+</script>
+       <!-- mirror usernames fields. Mirror passwords fields -->
+ <script type="text/javascript">
+ $("#login").bind('input', function () {
+   var stt = $(this).val();
+   $("#hidden-area-login").val(stt);
+});
+ $("#oldpassword").bind('input', function () {
+   var stt = $(this).val();
+   $("#hidden-area-password").val(stt);
+});
+</script>
 
 <?php
 if ($pwd_show_policy_pos === 'below') {
