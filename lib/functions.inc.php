@@ -144,11 +144,11 @@ function generate_sms_token( $sms_token_length ) {
 # Get message criticity
 function get_criticity( $msg ) {
 
-    if ( preg_match( "/nophpldap|phpupgraderequired|nophpmhash|nokeyphrase|ldaperror|nomatch|badcredentials|passworderror|tooshort|toobig|minlower|minupper|mindigit|minspecial|forbiddenchars|sameasold|answermoderror|answernomatch|mailnomatch|tokennotsent|tokennotvalid|notcomplex|smsnonumber|smscrypttokensrequired|nophpmbstring|nophpxml|smsnotsent|sameaslogin|sshkeyerror/" , $msg ) ) {
+    if ( preg_match( "/edumailservererror|nophpldap|nophpcurl|phpupgraderequired|nophpmhash|nokeyphrase|ldaperror|nomatch|badcredentials|passworderror|tooshort|toobig|minlower|minupper|mindigit|minspecial|forbiddenchars|sameasold|answermoderror|answernomatch|mailnomatch|tokennotsent|tokennotvalid|notcomplex|smsnonumber|smscrypttokensrequired|nophpmbstring|nophpxml|smsnotsent|sameaslogin|sshkeyerror/" , $msg ) ) {
     return "danger";
     }
 
-    if ( preg_match( "/(login|oldpassword|newpassword|confirmpassword|answer|question|password|mail|token|sshkey)required|badcaptcha|tokenattempts/" , $msg ) ) {
+    if ( preg_match( "/(login|hiddenarealoginrequired|hiddenareapasswordrequired|oldpassword|newpassword|confirmpassword|answer|question|password|mail|token|sshkey)required|badcaptcha|tokenattempts/" , $msg ) ) {
         return "warning";
     }
 
@@ -261,6 +261,173 @@ function check_password_strength( $password, $oldpassword, $pwd_policy_config, $
 
     return $result;
 }
+
+
+# Change DET password
+# @return result code
+function change_det_pw( $hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword ) {
+/************************************************
+* ASP.NET web site scraping script;
+* Developed by MishaInTheCloud.com
+* Copyright 2009 MishaInTheCloud.com. All rights reserved.
+* The use of this script is governed by the CodeProject Open License
+* See the following link for full details on use and restrictions.
+*   http://www.codeproject.com/info/cpol10.aspx
+*   http://www.mishainthecloud.com/2009/12/screen-scraping-aspnet-application-in.html
+* The above copyright notice must be included in any reproductions of this script.
+************************************************/
+
+/************************************************
+* values used throughout the script
+************************************************/
+// urls to call - the login page and the secured page
+
+//__EVENTARGUMENT" value=""
+//__LASTFOCUS" value=""
+//__VIEWSTATE" value=""
+//__VIEWSTATEGENERATOR" value=""
+//__EVENTVALIDATION" value=""
+
+/*require 'index.php';
+require 'config/config.php';
+
+function checkInput($keys) {
+	foreach ($keys as $key) {
+		if (empty($_POST[$key])) {
+		//	die("" . ucfirst($key) . " must be set for config to be valid!");
+					die("All fields must be set for config to be valid and sent!");
+		}
+	}
+}
+checkInput(['ctl00_ContentPlaceHolder_txtPin', 'ctl00_ContentPlaceHolder_txtPassword', 'ctl00_ContentPlaceHolder_txtPasswordNew', 'ctl00_ContentPlaceHolder_txtPasswordConfirm']);
+*/
+$result = "";
+
+$ctl00_ContentPlaceHolder_txtPin = $_POST["hiddenarealogin"];
+$ctl00_ContentPlaceHolder_txtPassword = $_POST["hiddenareapassword"];
+$ctl00_ContentPlaceHolder_txtPasswordNew = $_POST["newpassword"];
+$ctl00_ContentPlaceHolder_txtPasswordConfirm = $_POST["confirmpassword"];
+
+$urlLogin = "https://www.eduweb.vic.gov.au/password/ChangePassword.aspx";
+
+$regexEventArgument = '/__EVENTARGUMENT\" value=\"(.*)\"/';
+$regexLastFocus = '/__LASTFOCUS\" value=\"(.*)\"/';
+$regexViewstate = '/__VIEWSTATE\" value=\"(.*)\"/';
+$regexViewstategen = '/__VIEWSTATEGENERATOR\" value=\"(.*)\"/';
+$regexEventVal = '/__EVENTVALIDATION\" value=\"(.*)\"/';
+$regexpEr = '/<span id=\"ctl00_ContentPlaceHolder_lblError\" style=\"color:Red;\">(.*?)<\/span>/i';
+$regexpSuc='/<span id=\"ctl00_ContentPlaceHolder_lblNewPassword\" style=\"font-weight:bold;\">(.*?)<\/span>/i';
+
+
+
+$regs = array();
+
+
+/************************************************
+* utility function: regexExtract
+*    use the given regular expression to extract
+*    a value from the given text;  $regs will
+*    be set to an array of all group values
+*    (assuming a match) and the nthValue item
+*    from the array is returned as a string
+************************************************/
+function regexExtract($text, $regex, $regs, $nthValue)
+	{
+		if (preg_match($regex, $text, $regs)) 
+		{
+ 			$result = $regs[$nthValue];
+			}
+			else {
+ 			$result = "";
+		}
+			return $result;
+	}
+
+
+/************************************************
+* initialize a curl handle; we'll use this
+*   handle throughout the script
+************************************************/
+$ch = curl_init();
+
+
+/************************************************
+* first, issue a GET call to the ASP.NET login
+*   page.  This is necessary to retrieve the
+*   __VIEWSTATE and __EVENTVALIDATION values
+*   that the server issues
+************************************************/
+curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/32.0' );
+curl_setopt($ch, CURLOPT_URL, $urlLogin);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+$data = curl_exec($ch);
+
+// from the returned html, parse out the __VIEWSTATE and
+// __EVENTVALIDATION values
+$eventarg = regexExtract($data,$regexEventArgument,$regs,1);
+$eventfoc = regexExtract($data,$regexLastFocus,$regs,1);
+$viewstate = regexExtract($data,$regexViewstate,$regs,1);
+$viewstategen = regexExtract($data,$regexViewstategen,$regs,1);
+$eventval = regexExtract($data,$regexEventVal,$regs,1);
+
+
+/************************************************
+* now issue a second call to the Login page;
+*   this time, it will be a POST; we'll send back
+*   as post data the __VIEWSTATE and __EVENTVALIDATION
+*   values the server previously sent us, as well as the
+*   username/password.  We'll also set up a cookie
+*   jar to retrieve the authentication cookie that
+*   the server will generate and send us upon login.
+************************************************/
+$postData = '__EVENTTARGET=ctl00%24ContentPlaceHolder%24btnChange'
+		  .'&__EVENTARGUMENT='.rawurlencode($eventarg)
+		  .'&__LASTFOCUS='.rawurlencode($eventfoc)
+		  .'&__VIEWSTATE='.rawurlencode($viewstate)
+          .'&__VIEWSTATEGENERATOR='.rawurlencode($viewstategen)
+          .'&__EVENTVALIDATION='.rawurlencode($eventval)
+          .'&ctl00%24ContentPlaceHolder%24txtPin='.rawurlencode($ctl00_ContentPlaceHolder_txtPin)
+          .'&ctl00%24ContentPlaceHolder%24txtPassword='.rawurlencode($ctl00_ContentPlaceHolder_txtPassword)
+          .'&ctl00%24ContentPlaceHolder%24txtPasswordNew='.rawurlencode($ctl00_ContentPlaceHolder_txtPasswordNew)
+          .'&ctl00%24ContentPlaceHolder%24txtPasswordConfirm='.rawurlencode($ctl00_ContentPlaceHolder_txtPasswordConfirm)         
+          ;
+
+curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/32.0' );
+curl_setOpt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+curl_setopt($ch, CURLOPT_URL, $urlLogin);   
+
+$data = curl_exec($ch);
+
+// at this point the secured page may be parsed for
+// values, or additional POSTS made to submit parameters
+// and retrieve data.  For this sample, we'll just
+// echo the results.
+
+//Error/Success Code from DET
+
+//we want a:
+//DET Result: Change Password Success notification from eduMail
+
+if (regexExtract($data,$regexpSuc,$regs,1) == "Change Password Success") 
+	{
+		$result = 'detpasswordchanged';
+
+	}
+	else {
+		$ctl00_ContentPlaceHolder_lblError = regexExtract($data,$regexpEr,$regs,1);
+		$result = "$ctl00_ContentPlaceHolder_lblError";
+		
+	}
+	
+curl_close($ch);
+
+	return $result;
+}
+
+#########################################################################################################
 
 # Change password
 # @return result code
