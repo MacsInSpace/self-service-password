@@ -177,22 +177,21 @@ if ( $result === "true" ) {
 #==============================================================================
 # Change eduMail password
 #==============================================================================
- /*if ( isset($_POST["toggleextra"]) ) {
- 	if ( $result === "detpasswordchanged" ) {
-		$result = change_det_pw( $hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword );
-		if ( $result === "" ) {
- 		   $result = change_password($ldap, $userdn, $newpassword, $ad_mode, $ad_options, $samba_mode, $samba_options, $shadow_options, $hash, $hash_options, $who_change_password, $oldpassword);
- 		   if ( $result === "passwordchanged" && isset($posthook) ) {
-   		     $command = escapeshellcmd($posthook).' '.escapeshellarg($login).' '.escapeshellarg($newpassword).' '.escapeshellarg($oldpassword);
-      		  exec($command);
-		   		}
+if ( isset($_POST["toggleextra"]) ) {
+ 	if ( $result === "" ) {
+		$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);
+ 			if ( $result === "detpasswordchanged" ) {
+				if ( $result === "" ) {
+    				$result = change_password($ldap, $userdn, $newpassword, $ad_mode, $ad_options, $samba_mode, $samba_options, $shadow_options, $hash, $hash_options, $who_change_password, $oldpassword);
+   	 					if ( $result === "passwordchanged" && isset($posthook) ) {
+        				$command = escapeshellcmd($posthook).' '.escapeshellarg($login).' '.escapeshellarg($newpassword).' '.escapeshellarg($oldpassword);
+        				exec($command);
+   	  					}
+					}	
+				}
 			}
-		} else {
-		$result === "ctl00_ContentPlaceHolder_lblError";
-	}  else {
+	} else {
 
-
-*/
 #==============================================================================
 # Change password
 #==============================================================================
@@ -203,7 +202,7 @@ if ( $result === "" ) {
         exec($command);
    	  }
 	}
-
+}
 
 #==============================================================================
 # HTML
