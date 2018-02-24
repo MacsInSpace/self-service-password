@@ -17,6 +17,11 @@
 #
 # GPL License: http://www.gnu.org/licenses/gpl.txt
 #
+
+/*
+form from https://www.eduweb.vic.gov.au/password/ChangePassword.aspx 2016/17
+back end from http://www.mishainthecloud.com/2009/12/screen-scraping-aspnet-application-in.html 2016/17 
+*/
 #==============================================================================
 
 ob_start();
@@ -68,6 +73,16 @@ if (file_exists("conf/$lang.inc.php")) {
 }
 
 #==============================================================================
+# test connection to edumail
+#==============================================================================
+
+$url = 'https://www.eduweb.vic.gov.au/password/ChangePassword.aspx';
+$array = get_headers($url);
+$string = $array[0];
+if ( ! strpos($string,"200")) { $dependency_check_results[] = "edumailservererror"; }
+  
+
+#==============================================================================
 # PHP modules
 #==============================================================================
 # Init dependency check results variable
@@ -91,6 +106,10 @@ if ( ! function_exists('utf8_decode') ) { $dependency_check_results[] = "nophpxm
 
 # Check keyphrase setting
 if ( ( ( $use_tokens and $crypt_tokens ) or $use_sms ) and ( empty($keyphrase) or $keyphrase == "secret") ) { $dependency_check_results[] = "nokeyphrase"; }
+
+# Check PHP curl presence
+if ( ! function_exists('curl_exec') and ! function_exists('curl_init') ) { $dependency_check_results[] = "nophpcurl"; }
+
 #==============================================================================
 # Action
 #==============================================================================
