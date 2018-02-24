@@ -40,11 +40,11 @@ $hiddenareapassword = "";
 
 #if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
 # else { $result = "toggleextrarequired"; }
-if (! isset($_POST["toggleextra"]) and $_POST["hiddenarealogin"]) { $hiddenarealogin = $_POST["hiddenarealogin"]; }
- else { $result = "hiddenarealoginrequired"; }
-if (! isset($_POST["toggleextra"]) and $_POST["hiddenareapassword"]) { $hiddenareapassword = $_POST["hiddenareapassword"]; }
- else { $result = "hiddenareapasswordrequired"; }
- if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = $_POST["confirmpassword"]; }
+#if (isset($_POST['toggleextra']) || (! isset($_POST["hiddenarealogin"]))) { $hiddenarealogin = $_POST["hiddenarealogin"]; }
+# else { $result = "hiddenarealoginrequired"; }
+#if (isset($_POST['toggleextra']) || (! isset($_POST["hiddenareapassword"]))) { $hiddenareapassword = $_POST["hiddenareapassword"]; }
+# else { $result = "hiddenareapasswordrequired"; }
+if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = $_POST["confirmpassword"]; }
  else { $result = "confirmpasswordrequired"; }
 if (isset($_POST["newpassword"]) and $_POST["newpassword"]) { $newpassword = $_POST["newpassword"]; }
  else { $result = "newpasswordrequired"; }
@@ -271,8 +271,8 @@ if ($pwd_show_policy_pos === 'above') {
             </div>
             <?php echo "<BR>"; ?>
             <!-- Here's the tick box -->
-            <input type="checkbox" id="toggleextra">
-            <label for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
+            <input style="display: none" type="checkbox" id="toggleextra" value="1">
+            <label style="display: none" for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
             <!-- end tick box -->     
         </div>
     </div>
