@@ -20,7 +20,7 @@
 #==============================================================================
 
 # This page is called to change password
-# Will be heavily modified to change and "sync" 2 LDAP passwords 
+
 #==============================================================================
 # POST parameters
 #==============================================================================
@@ -34,8 +34,17 @@ $ldap = "";
 $userdn = "";
 if (!isset($pwd_forbidden_chars)) { $pwd_forbidden_chars=""; }
 $mail = "";
+$toggleextra = "";
+$hiddenarealogin = "";
+$hiddenareapassword = "";
 
-if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = $_POST["confirmpassword"]; }
+#if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
+# else { $result = "toggleextrarequired"; }
+if (! isset($_POST["toggleextra"]) and $_POST["hiddenarealogin"]) { $hiddenarealogin = $_POST["hiddenarealogin"]; }
+ else { $result = "hiddenarealoginrequired"; }
+if (! isset($_POST["toggleextra"]) and $_POST["hiddenareapassword"]) { $hiddenareapassword = $_POST["hiddenareapassword"]; }
+ else { $result = "hiddenareapasswordrequired"; }
+ if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = $_POST["confirmpassword"]; }
  else { $result = "confirmpasswordrequired"; }
 if (isset($_POST["newpassword"]) and $_POST["newpassword"]) { $newpassword = $_POST["newpassword"]; }
  else { $result = "newpasswordrequired"; }
@@ -50,7 +59,9 @@ if (! isset($_REQUEST["login"]) and ! isset($_POST["confirmpassword"]) and ! iss
 if ( $result === "" ) {
     $result = check_username_validity($login,$login_forbidden_chars);
 }
-
+if ( $result === "" ) {
+    $result = check_username_validity($hiddenarealogin,$login_forbidden_chars);
+}
 # Match new and confirm password
 if ( $newpassword != $confirmpassword ) { $result="nomatch"; }
 
@@ -160,11 +171,28 @@ if ( $result === "" ) {
 #==============================================================================
 # Check password strength
 #==============================================================================
-if ( $result === "" ) {
+if ( $result === "true" ) {
     $result = check_password_strength( $newpassword, $oldpassword, $pwd_policy_config, $login );
 }
+#==============================================================================
+# Change eduMail password
+#==============================================================================
+ /*if ( isset($_POST["toggleextra"]) ) {
+ 	if ( $result === "detpasswordchanged" ) {
+		$result = change_det_pw( $hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword );
+		if ( $result === "" ) {
+ 		   $result = change_password($ldap, $userdn, $newpassword, $ad_mode, $ad_options, $samba_mode, $samba_options, $shadow_options, $hash, $hash_options, $who_change_password, $oldpassword);
+ 		   if ( $result === "passwordchanged" && isset($posthook) ) {
+   		     $command = escapeshellcmd($posthook).' '.escapeshellarg($login).' '.escapeshellarg($newpassword).' '.escapeshellarg($oldpassword);
+      		  exec($command);
+		   		}
+			}
+		} else {
+		$result === "ctl00_ContentPlaceHolder_lblError";
+	}  else {
 
 
+*/
 #==============================================================================
 # Change password
 #==============================================================================
@@ -173,8 +201,9 @@ if ( $result === "" ) {
     if ( $result === "passwordchanged" && isset($posthook) ) {
         $command = escapeshellcmd($posthook).' '.escapeshellarg($login).' '.escapeshellarg($newpassword).' '.escapeshellarg($oldpassword);
         exec($command);
-    }
-}
+   	  }
+	}
+
 
 #==============================================================================
 # HTML
@@ -243,8 +272,8 @@ if ($pwd_show_policy_pos === 'above') {
             </div>
             <?php echo "<BR>"; ?>
             <!-- Here's the tick box -->
-            <input type="checkbox" id="toggle-extra">
-            <label for="toggle-extra"><?php echo "Sync eduMail (eduMail Users Only)"; ?></label>
+            <input type="checkbox" id="toggleextra">
+            <label for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
             <!-- end tick box -->     
         </div>
     </div>
@@ -252,20 +281,20 @@ if ($pwd_show_policy_pos === 'above') {
     <!-- Added an id for the hidden field row here and set it to not display -->
     <div class="form-group2" id="hidden-area" style="display: none;">
     <div class="form-group">
-        <label for="hidden-area-login" class="col-sm-4 control-label"><?php echo "eduMail Username"; ?></label>
+        <label for="hiddenarealogin" class="col-sm-4 control-label"><?php echo "eduMail Username"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-                <input type="text" name="hidden-area-login" id="hidden-area-login" value="" class="form-control" placeholder="<?php echo "012345678"; ?>" />
+                <input type="text" name="hiddenarealogin" id="hiddenarealogin" value="" class="form-control" placeholder="<?php echo "012345678"; ?>" />
             </div>
         </div>
      </div>
     <div class="form-group">
-        <label for="hidden-area-password" class="col-sm-4 control-label"><?php echo "eduMail Password"; ?></label>
+        <label for="hiddenareapassword" class="col-sm-4 control-label"><?php echo "eduMail Password"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
-                <input type="password" name="hidden-area-password" id="hidden-area-password" class="form-control" placeholder="<?php echo "Old eduMail Password"; ?>" />
+                <input type="password" name="hiddenareapassword" id="hiddenareapassword" class="form-control" placeholder="<?php echo "Old eduMail Password"; ?>" />
             </div>
         </div>
      </div>
@@ -309,8 +338,9 @@ if ($pwd_show_policy_pos === 'above') {
     </div>
 </form>
 </div>
-<script src="https://password.livingstoneps.vic.edu.au/js/jquery-1.10.2.min.js"></script>
-<script src="https://password.livingstoneps.vic.edu.au/js/bootstrap.min.js"></script><script>
+<script src="/js/jquery-1.10.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
     $(document).ready(function(){
         // Menu links popovers
         $('[data-toggle="menu-popover"]').popover({
@@ -321,7 +351,7 @@ if ($pwd_show_policy_pos === 'above') {
     });
     
     // Set an on click event handler for the tick box to toggle the field on and off
-    $('#toggle-extra').on('click', function() { 
+    $('#toggleextra').on('click', function() { 
    		$('#hidden-area').slideToggle() 
     });
 </script>
@@ -329,11 +359,11 @@ if ($pwd_show_policy_pos === 'above') {
  <script type="text/javascript">
  $("#login").bind('input', function () {
    var stt = $(this).val();
-   $("#hidden-area-login").val(stt);
+   $("#hiddenarealogin").val(stt);
 });
  $("#oldpassword").bind('input', function () {
    var stt = $(this).val();
-   $("#hidden-area-password").val(stt);
+   $("#hiddenareapassword").val(stt);
 });
 </script>
 
@@ -361,4 +391,3 @@ if ($pwd_show_policy_pos === 'below') {
 
 }
 ?>
-
