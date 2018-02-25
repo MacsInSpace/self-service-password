@@ -38,7 +38,9 @@ $toggleextra = "";
 $hiddenarealogin = "";
 $hiddenareapassword = "";
 
- if (isset($_POST['toggleextra']) || (empty($_POST["hiddenarealogin"]))) { $result = "hiddenarealoginrequired"; }
+#if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
+
+if (isset($_POST['toggleextra']) || (empty($_POST["hiddenarealogin"]))) { $result = "hiddenarealoginrequired"; }
  else { $hiddenarealogin = $_POST["hiddenarealogin"]; }
 if (isset($_POST['toggleextra']) || (empty($_POST["hiddenareapassword"]))) { $result = "hiddenareapasswordrequired"; }
  else { $hiddenareapassword = $_POST["hiddenareapassword"]; } 
@@ -175,19 +177,11 @@ if ( $result === "true" ) {
 #==============================================================================
 # Change eduMail password
 #==============================================================================
-if ( isset($_POST["toggleextra"]) ) {
- 	if ( $result === "" ) {
-		$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);
- 			if ( $result === "detpasswordchanged" ) {
-    				$result = change_password($ldap, $userdn, $newpassword, $ad_mode, $ad_options, $samba_mode, $samba_options, $shadow_options, $hash, $hash_options, $who_change_password, $oldpassword);
-   	 					if ( $result === "passwordchanged" && isset($posthook) ) {
-        				$command = escapeshellcmd($posthook).' '.escapeshellarg($login).' '.escapeshellarg($newpassword).' '.escapeshellarg($oldpassword);
-        				exec($command);
-   	  					}
-					}	
-				}
-	} else {
-
+if ( isset($toggleextra) && isset($hiddenarealogin) && isset($hiddenareapassword) ) {
+	if ( $result === "detpasswordchanged" ) {
+		$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);	
+    	} 
+	}
 #==============================================================================
 # Change password
 #==============================================================================
@@ -198,8 +192,6 @@ if ( $result === "" ) {
         exec($command);
    	  }
 	}
-}
-
 #==============================================================================
 # HTML
 #==============================================================================
@@ -267,8 +259,8 @@ if ($pwd_show_policy_pos === 'above') {
             </div>
             <?php echo "<BR>"; ?>
             <!-- Here's the tick box -->
-            <input style="display: none" type="checkbox" id="toggleextra" value="Yes">
-            <label style="display: none" for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
+            <input type="checkbox" id="toggleextra" value="Yes">
+            <label for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
             <!-- end tick box -->     
         </div>
     </div>
