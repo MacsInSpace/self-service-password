@@ -413,19 +413,18 @@ $data = curl_exec($ch);
 
 if (regexExtract($data,$regexpSuc,$regs,1) == "Change Password Success") 
 	{
-		$result = 'detpasswordchanged';
-
+		$result = regexExtract($data,$regexpSuc,$regs,1);
 	}
 	else {
-		$ctl00_ContentPlaceHolder_lblError = regexExtract($data,$regexpEr,$regs,1);
-		$result = "$ctl00_ContentPlaceHolder_lblError";
+		$result = regexExtract($data,$regexpEr,$regs,1);
 		
 	}
-	
-curl_close($ch);
 
-	return $result;
+		error_log("DET result:$result");
+	curl_close($ch);
+return $result;
 }
+
 
 #########################################################################################################
 
