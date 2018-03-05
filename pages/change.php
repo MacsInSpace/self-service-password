@@ -178,10 +178,11 @@ if ( $result === "true" ) {
 # Change eduMail password
 #==============================================================================
 if ( isset($toggleextra) && isset($hiddenarealogin) && isset($hiddenareapassword) ) {
-	if ( $result === "detpasswordchanged" ) {
-		$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);	
-    	} 
+	if ( $result === "" ) {
+			$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);	
+		
 	}
+}
 #==============================================================================
 # Change password
 #==============================================================================
