@@ -413,16 +413,17 @@ $data = curl_exec($ch);
 
 if (regexExtract($data,$regexpSuc,$regs,1) == "Change Password Success") 
 	{
-		$result = regexExtract($data,$regexpSuc,$regs,1);
+		$result = "";
 	}
 	else {
 		$result = regexExtract($data,$regexpEr,$regs,1);
 		
 	}
 
-		error_log("DET result:$result");
-	curl_close($ch);
-return $result;
+            error_log("DET result:$ctl00_ContentPlaceHolder_txtPin:$result");
+
+curl_close($ch);
+	return $result;
 }
 
 
