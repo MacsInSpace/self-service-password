@@ -38,8 +38,7 @@ $toggleextra = "";
 $hiddenarealogin = "";
 $hiddenareapassword = "";
 
-#if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
-
+if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
 if (isset($_POST['toggleextra']) || (empty($_POST["hiddenarealogin"]))) { $result = "hiddenarealoginrequired"; }
  else { $hiddenarealogin = $_POST["hiddenarealogin"]; }
 if (isset($_POST['toggleextra']) || (empty($_POST["hiddenareapassword"]))) { $result = "hiddenareapasswordrequired"; }
@@ -177,10 +176,9 @@ if ( $result === "true" ) {
 #==============================================================================
 # Change eduMail password
 #==============================================================================
-if ( isset($toggleextra) && isset($hiddenarealogin) && isset($hiddenareapassword) ) {
+if ( !empty($toggleextra)) {
 	if ( $result === "" ) {
-			$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);	
-		
+		$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);	
 	}
 }
 #==============================================================================
@@ -260,7 +258,7 @@ if ($pwd_show_policy_pos === 'above') {
             </div>
             <?php echo "<BR>"; ?>
             <!-- Here's the tick box -->
-            <input type="checkbox" id="toggleextra" value="Yes">
+            <input type="checkbox" name="toggleextra" id="toggleextra" value="Yes">
             <label for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
             <!-- end tick box -->     
         </div>
