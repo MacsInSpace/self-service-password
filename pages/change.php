@@ -177,8 +177,13 @@ if ( $result === "true" ) {
 # Change eduMail password
 #==============================================================================
 if ( !empty($toggleextra)) {
-	if ( $result === "" ) {
-		$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);	
+
+	if ( $result === "DET:Change Password Success" ) {
+			#echo "changing det pw";
+			$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);
+			if ( $result !== "DET:Change Password Success" ) {
+				$result = "DET error: $result";
+			}	
 	}
 }
 #==============================================================================
