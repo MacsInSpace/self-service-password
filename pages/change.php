@@ -39,10 +39,10 @@ $hiddenarealogin = "";
 $hiddenareapassword = "";
 
 if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
-if (isset($_POST['toggleextra']) || (empty($_POST["hiddenarealogin"]))) { $result = "hiddenarealoginrequired"; }
- else { $hiddenarealogin = $_POST["hiddenarealogin"]; }
-if (isset($_POST['toggleextra']) || (empty($_POST["hiddenareapassword"]))) { $result = "hiddenareapasswordrequired"; }
- else { $hiddenareapassword = $_POST["hiddenareapassword"]; } 
+if (!isset($_POST['toggleextra']) || (!empty($_POST["hiddenarealogin"]))) { $hiddenarealogin = $_POST["hiddenarealogin"]; }
+ else { $result = "hiddenarealoginrequired"; }
+if (!isset($_POST['toggleextra']) || (!empty($_POST["hiddenareapassword"]))) { $hiddenareapassword = $_POST["hiddenareapassword"]; }
+ else { $result = "hiddenareapasswordrequired"; }
 if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = $_POST["confirmpassword"]; }
  else { $result = "confirmpasswordrequired"; }
 if (isset($_POST["newpassword"]) and $_POST["newpassword"]) { $newpassword = $_POST["newpassword"]; }
