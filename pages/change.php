@@ -278,7 +278,7 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-                <input type="text" name="hiddenarealogin" id="hiddenarealogin" value="" class="form-control" placeholder="<?php echo "012345678"; ?>" />
+                <input type="text" name="hiddenarealogin" id="hiddenarealogin" class="form-control" placeholder="<?php echo "012345678"; ?>" />
             </div>
         </div>
      </div>
