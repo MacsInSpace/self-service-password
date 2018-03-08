@@ -181,9 +181,11 @@ if ( !empty($toggleextra)) {
 	if ( $result === "" ) {
 			#echo "changing det pw";
 			$result = change_det_pw($hiddenarealogin, $hiddenareapassword, $newpassword, $confirmpassword);
-			if ( $result !== "Success" ) {
-				$result = "DET error: $result";
-			}	
+			if ( $result == "Success" ) {
+				$result = "";
+			}	else {
+			$result = "DET error: $result";
+			}
 	}
 }
 #==============================================================================
