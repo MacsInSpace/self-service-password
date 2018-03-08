@@ -413,7 +413,7 @@ $data = curl_exec($ch);
 
 if (regexExtract($data,$regexpSuc,$regs,1) == "Change Password Success") 
 	{
-		$result = "DET: Change Password Success";
+		$result = "Success";
 	} else {
 		$result = regexExtract($data,$regexpEr,$regs,1);
 	}
