@@ -359,6 +359,14 @@ if ($pwd_show_policy_pos === 'above') {
    $("#hiddenareapassword").val(stt);
 });
 </script>
+<script>
+	    // let the browser natively reset default
+			$(window).bind("pageshow", function() {
+    		var form = $('form'); 
+    		form[0].reset();
+			});
+			
+</script>
 
 <?php
 if ($pwd_show_policy_pos === 'below') {
