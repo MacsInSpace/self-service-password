@@ -38,11 +38,12 @@ $toggleextra = "";
 $hiddenarealogin = "";
 $hiddenareapassword = "";
 
-if (isset($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
-if (!isset($_POST['toggleextra']) || (!empty($_POST["hiddenarealogin"]))) { $hiddenarealogin = $_POST["hiddenarealogin"]; }
- else { $result = "hiddenarealoginrequired"; }
-if (!isset($_POST['toggleextra']) || (!empty($_POST["hiddenareapassword"]))) { $hiddenareapassword = $_POST["hiddenareapassword"]; }
- else { $result = "hiddenareapasswordrequired"; }
+if (!empty($_POST["toggleextra"]) and $_POST["toggleextra"]) { $toggleextra = $_POST["toggleextra"]; }
+if (isset($_POST["hiddenarealogin"]) and $_POST["hiddenarealogin"]) { $hiddenarealogin = $_POST["hiddenarealogin"]; }
+if (isset($_POST["hiddenareapassword"]) and $_POST["hiddenareapassword"]) { $hiddenareapassword = $_POST["hiddenareapassword"]; }
+if (!empty($_POST["toggleextra"]) and !isset($_POST["hiddenarealogin"])) { $result = "hiddenarealoginrequired"; }
+if (!empty($_POST["toggleextra"]) and !isset($_POST["hiddenareapassword"])) { $result = "hiddenareapasswordrequired"; }
+
 if (isset($_POST["confirmpassword"]) and $_POST["confirmpassword"]) { $confirmpassword = $_POST["confirmpassword"]; }
  else { $result = "confirmpasswordrequired"; }
 if (isset($_POST["newpassword"]) and $_POST["newpassword"]) { $newpassword = $_POST["newpassword"]; }
@@ -248,11 +249,23 @@ if ($pwd_show_policy_pos === 'above') {
 <div class="alert alert-info">
 <form action="#" method="post" class="form-horizontal">
     <div class="form-group">
+        <label for="login" class="col-sm-4 control-label"><?php echo "Sync eduMail Password<BR><font size='1'>(eduMail Users Only)</font>"; ?></label>
+        <div class="col-sm-8">
+            <div class="input-group">
+			<?php echo "<BR>"; ?>
+            <!-- Here's the tick box -->
+            <input type="checkbox" name="toggleextra" id="toggleextra">
+            <label for="toggleextra"></label>
+            <!-- end tick box -->     
+           </div>
+        </div>
+    </div>
+    <div class="form-group">
         <label for="login" class="col-sm-4 control-label"><?php echo "Local Nework Username"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-                <input type="text" name="login" id="login" value="<?php echo htmlentities($login) ?>" class="form-control" placeholder="<?php echo "012345678 or ABC0001"; ?>" />
+                <input type="text" name="login" autocomplete="username" id="login" value="<?php echo htmlentities($login) ?>" class="form-control" placeholder="<?php echo "012345678 or ABC0001"; ?>" />
             </div>
         </div>
     </div>
@@ -261,16 +274,11 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
-                <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="<?php echo $messages["oldpassword"]; ?>" />
+                <input type="password" name="oldpassword" autocomplete="current-password" id="oldpassword" class="form-control" placeholder="<?php echo $messages["oldpassword"]; ?>" />
             </div>
-            <?php echo "<BR>"; ?>
-            <!-- Here's the tick box -->
-            <input type="checkbox" name="toggleextra" id="toggleextra">
-            <label for="toggleextra"><?php echo "Sync eduMail (eduMail Users Only) - COMING SOON"; ?></label>
-            <!-- end tick box -->     
         </div>
     </div>
-    
+    <?php echo "<BR>"; ?>
     <!-- Added an id for the hidden field row here and set it to not display -->
     <div class="form-group2" id="hidden-area" style="display: none;">
     <div class="form-group">
@@ -278,7 +286,7 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-                <input type="text" name="hiddenarealogin" id="hiddenarealogin" class="form-control" placeholder="<?php echo "012345678"; ?>" />
+                <input type="text" name="hiddenarealogin" autocomplete="username" id="hiddenarealogin" class="form-control" placeholder="<?php echo "012345678"; ?>" />
             </div>
         </div>
      </div>
@@ -287,7 +295,7 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
-                <input type="password" name="hiddenareapassword" id="hiddenareapassword" class="form-control" placeholder="<?php echo "Old eduMail Password"; ?>" />
+                <input type="password" name="hiddenareapassword" autocomplete="current-password" id="hiddenareapassword" class="form-control" placeholder="<?php echo "Old eduMail Password"; ?>" />
             </div>
         </div>
      </div>
@@ -301,7 +309,7 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
-                <input type="password" name="newpassword" id="newpassword" class="form-control" placeholder="<?php echo $messages["newpassword"]; ?>" />
+                <input type="password" name="newpassword" id="newpassword" autocomplete="new-password" class="form-control" placeholder="<?php echo $messages["newpassword"]; ?>" />
             </div>
         </div>
     </div>
@@ -310,7 +318,7 @@ if ($pwd_show_policy_pos === 'above') {
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
-                <input type="password" name="confirmpassword" id="confirmpassword" class="form-control" placeholder="<?php echo $messages["confirmpassword"]; ?>" />
+                <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="new-password" class="form-control" placeholder="<?php echo $messages["confirmpassword"]; ?>" />
             </div>
         </div>
     </div>
@@ -367,7 +375,6 @@ if ($pwd_show_policy_pos === 'above') {
 			});
 			
 </script>
-
 <?php
 if ($pwd_show_policy_pos === 'below') {
     show_policy($messages, $pwd_policy_config, $result);
