@@ -261,7 +261,7 @@ if ($pwd_show_policy_pos === 'above') {
         </div>
     </div>
     <div class="form-group">
-        <label for="login" class="col-sm-4 control-label"><?php echo "Local Nework Username"; ?></label>
+        <label for="login" class="col-sm-4 control-label"><?php echo "Local Network Username"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
@@ -270,7 +270,7 @@ if ($pwd_show_policy_pos === 'above') {
         </div>
     </div>
     <div class="form-group">
-        <label for="oldpassword" class="col-sm-4 control-label"><?php echo "Local Nework Password"; ?></label>
+        <label for="oldpassword" class="col-sm-4 control-label"><?php echo "Local Network Password"; ?></label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
