@@ -9,8 +9,7 @@ Self Service Password is a PHP application that allows users to change their pas
 
 The application can be used on standard LDAPv3 directories (OpenLDAP, OpenDS, ApacheDS, Sun Oracle DSEE, Novell, etc.) and also on Active Directory.
 
-![Screenshot](https://drive.google.com/file/d/1PAhvliH9AOQTQRE6qTbDYgeWMx3HzexP/view?usp=sharing?w=800&h=666&tok=abc22c)
-![Screenshot](https://drive.google.com/file/d/1W1X-DkBop_plB6c5bx8P4_tGqlDW85oq/view?usp=sharing?w=800&h=666&tok=abc22c)
+![Screenshot](https://drive.google.com/file/d/1W1X-DkBop_plB6c5bx8P4_tGqlDW85oq/preview?usp=sharing?w=800&h=666&tok=abc22c)
 It has the following features:
 * Samba mode to change Samba passwords
 * Active directory mode
