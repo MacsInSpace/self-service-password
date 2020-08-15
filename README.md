@@ -1,5 +1,5 @@
-# LDAP Tool Box Self Service Password
-
+# LDAP Tool Box Self Service Password - MacsInSpace Edition
+# MacsInSpace Edition adds Google Capture, JavaScript, and capability to change a second directory password (to match) via ASP web interface not controlled by us/you/me.
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/372/badge)](https://bestpractices.coreinfrastructure.org/projects/372)
 [![Build Status](https://travis-ci.org/ltb-project/self-service-password.svg?branch=master)](https://travis-ci.org/ltb-project/self-service-password)
 
